@@ -11,6 +11,7 @@ import WeatherIcon from "@/Components/Icons/WeatherIcon";
 import { getDayAndNightIcon } from "@/utils/getDayAndNight";
 import WeatherDetails from "@/Components/WeatherDetails/WeatherDetails";
 import { metersToKm } from "@/utils/metersToKm";
+import { convertWindSpeed } from "@/utils/windspeed";
 
 
 interface WeatherDetail {
@@ -149,11 +150,11 @@ export default function Home() {
                {/* Right */}
                <Container className="bg-gray-500 px-6 gap-4 justify-between overflow-x-auto">
                    <WeatherDetails visibility={metersToKm(firstData?.visibility ?? 1000)} 
+                     airPressure={`${firstData?.main.pressure} hPa`}
                       humidity={`${firstData?.main.humidity}%`}
                       sunrise={format(data?.city.sunrise ?? 1702949452, "H:mm")}
-                      // sunrise={}
                       sunset={format(data?.city.sunset ?? 1702517657, "H:mm")}
-                      // windSpeed={convertWindSpeed(firstData?.wind.speed ?? 1.64)}
+                      windSpeed={convertWindSpeed(firstData?.wind.speed ?? 1.64)}
                     
                    />
                </Container>
