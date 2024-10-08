@@ -12,6 +12,7 @@ import { getDayAndNightIcon } from "@/utils/getDayAndNight";
 import WeatherDetails from "@/Components/WeatherDetails/WeatherDetails";
 import { metersToKm } from "@/utils/metersToKm";
 import { convertWindSpeed } from "@/utils/windspeed";
+import ForcastDetail from "@/Components/ForcastDetail/ForcastDetail";
 
 
 interface WeatherDetail {
@@ -84,6 +85,22 @@ export default function Home() {
   );
 
   console.log(data)
+
+  const uniqueDates = [
+    ...new Set(
+      data?.list.map(
+        (entry) => new Date(entry.dt * 1000).toISOString().split("T")[0]
+      )
+    )
+  ]
+
+  const fisrtDataForEachDate = uniqueDates.map((date)=> {
+    return data?.list.find((entry)=> {
+      const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
+      const entryTime = new Date(entry.dt * 1000).getHours();
+      return entryDate === date && entryTime >= 6;
+    })
+  })
 
   const firstData = data?.list[0];
   console.log(firstData)
@@ -164,6 +181,32 @@ export default function Home() {
           {/* Weekly forecast data */}
           <section className="flex w-full flex-col gap-4">
             <p className="text-2xl">Forcast 7 Days</p>
+            {fisrtDataForEachDate.map((d, i) => (
+                <ForcastDetail
+                  key={i}
+                  description={d?.weather[0].description ?? ""}
+                  weatherIcon={d?.weather[0].icon ?? "01d"}
+                  date={d ? format(parseISO(d.dt_txt), "dd.MM") : ""}
+                  day={d ? format(parseISO(d.dt_txt), "dd.MM") : "EEEE"}
+                  feels_like={d?.main.feels_like ?? 0}
+                  temp={d?.main.temp ?? 0}
+                  temp_max={d?.main.temp_max ?? 0}
+                  temp_min={d?.main.temp_min ?? 0}
+                  airPressure={`${d?.main.pressure} hPa `}
+                  humidity={`${d?.main.humidity}% `}
+                  sunrise={format(
+                    fromUnixTime(data?.city.sunrise ?? 1702517657),
+                    "H:mm"
+                  )}
+                  sunset={format(
+                    fromUnixTime(data?.city.sunset ?? 1702517657),
+                    "H:mm"
+                  )}
+                  visibility={`${metersToKm(d?.visibility ?? 10000)} `}
+                  windSpeed={`${convertWindSpeed(d?.wind.speed ?? 1.64)} `}
+                />
+              ))}
+            
           </section>
       </main>
     </div>
