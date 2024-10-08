@@ -124,12 +124,12 @@ export default function Home() {
                       </p>
                   </div>
                   {/* Time and weather icon */}
-                  <div className="flex gap-10 sm:gap-16 overflow-x-auto w-full justify-between">
+                  <div className="flex gap-10 sm:gap-16 overflow-x-auto w-full justify-between text-white">
                     {data?.list.map((item, index)=> (
                         <div key={index} className="flex flex-col justify-between gap-2 items-center text-xs font-semibold">
                            <p className="whitespace-nowrap">{format(parseISO(item.dt_txt), "h:mm a")}</p>
                             <WeatherIcon iconName={getDayAndNightIcon(item.weather[0].icon, item.dt_txt)}/>
-                           <p>{convertKelvinToCelcius(item?.main.temp ?? 0)}°C</p>
+                           <p className="mb-2">{convertKelvinToCelcius(item?.main.temp ?? 0)}°C</p>
                         </div>
                      ))}
                   </div>

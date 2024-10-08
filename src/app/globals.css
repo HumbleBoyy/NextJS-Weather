@@ -7,3 +7,19 @@
   --foreground: #171717;
 }
 
+::-webkit-scrollbar {
+	width: 1px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #c1c1c1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #787878;
+}
