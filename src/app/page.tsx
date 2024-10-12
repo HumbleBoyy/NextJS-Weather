@@ -2,7 +2,7 @@
 
 import Navbar from "@/Components/Navbar/Navbar";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { format, fromUnixTime, parseISO } from "date-fns";
 import Container from "@/Components/Container/Container";
@@ -13,6 +13,7 @@ import WeatherDetails from "@/Components/WeatherDetails/WeatherDetails";
 import { metersToKm } from "@/utils/metersToKm";
 import { convertWindSpeed } from "@/utils/windspeed";
 import ForcastDetail from "@/Components/ForcastDetail/ForcastDetail";
+import { placeAtom } from "./atom";
 
 
 interface WeatherDetail {
@@ -70,7 +71,7 @@ interface WeatherData {
   };
 }
 export default function Home() {
-  // const[place, setPlace] = useState(placeAtom)
+  const[place, setPlace] = useState(placeAtom)
   
   const apiKey = process.env.NEXT_PUBLIC_WEATHER_APP_KEY;
 
@@ -78,13 +79,18 @@ export default function Home() {
     "repoData",
     async () => {
       const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=${apiKey}&cnt=56`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${apiKey}&cnt=56`
       );
       return data;
     }
   );
 
+  useEffect(()=> {
+    refetch()
+  }, [place, refetch])
+
   console.log(data)
+
 
   const uniqueDates = [
     ...new Set(
@@ -113,7 +119,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
-      <Navbar/>
+      <Navbar location={data?.city.name}/>
       <main className="px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
           {/* Today data */}
           <section className="space-y-4">
